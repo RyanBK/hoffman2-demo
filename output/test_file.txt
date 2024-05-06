@@ -1,1 +1,0 @@
-This is a test. The time is  2024-05-06 10:07:59.263074  and the working directory is  /Users/ryanbaxter-king/repos/hoffman2-demo
