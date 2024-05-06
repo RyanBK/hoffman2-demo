@@ -1,7 +1,7 @@
 
 # Basic Navigation Commands
 
-To SSH into the cluster:
+To SSH into the cluster. You likely will not see your password typing in as the terminal hides the characters.
 
 ```
 ssh USERNAME@hoffman2.idre.ucla.edu
@@ -30,25 +30,29 @@ mkdir output          # Make an outputs folder
 
 # Make a Test File
 
-**On your laptop**, make a new file. You can do this using `vim` or in R:
+**On your laptop**, make a new file. You can do this using `vim` or in R.  
+
+Type `i` to start editing the file. Press `escape` to stop editing, and get ready to save. Press `:x` to save.
 
 ```
 vim test_file.R # Open vim
 # [TYPE OR EDIT YOUR CODE OR FILE]
 
 cat(
-  "This is a test. The time is ", 
-  as.character(Sys.time()), 
-  " and the working directory is ", 
-  getwd(), 
+  "This is a test. The time is ",
+  as.character(Sys.time()),
+  " and the working directory is ",
+  getwd(),
   file = paste0(
-    "~/repos/hoffman2-demo/output/test_output_",
-    str_replace_all(as.character(Sys.time()), "-| | [:]", "_"), ".txt"
+  "~/repos/hoffman2-demo/output/test_output_",
+  gsub(pattern = "-| | [:]", replacement = "_", x = as.character(Sys.time())), ".txt"
   )
 )
 
 :x # To save, press escape first
 :q # To quit without saving, press escape first
+
+cat test_file.R # Print the file to the console to make sure it saved correctly.
 ```
 
 **On your laptop**, run the R script from the terminal.
