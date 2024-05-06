@@ -1,4 +1,5 @@
 
+# Basic Navigation Commands
 
 To SSH into the cluster:
 
@@ -27,6 +28,8 @@ cd    hoffman2-demo   # Enter the directory
 mkdir output          # Make an outputs folder
 ```
 
+# Make a Test File
+
 **On your laptop**, make a new file. You can do this using `vim` or in R:
 
 ```
@@ -38,55 +41,88 @@ cat(
   as.character(Sys.time()), 
   " and the working directory is ", 
   getwd(), 
-  file = "~/repos/hoffman2-demo/output/test_file.txt"
+  file = paste0(
+    "~/repos/hoffman2-demo/output/test_output_",
+    str_replace_all(as.character(Sys.time()), "-| | [:]", "_"), ".txt"
+  )
 )
 
-:x # To save
-:q # To quit without saving
+:x # To save, press escape first
+:q # To quit without saving, press escape first
 ```
 
 **On your laptop**, run the R script from the terminal.
 
 ```
-Rscript test_file.R
+Rscript test_file.R # Run the file
+ls output -l.       # Check whether the file ran
 ```
 
+**On your laptop**, commit your files to git if that's something you're into
 
-# OLD
+```
+# git init                         # Initialize a git repository
+git add -A                         # Stage the files
+git commit -m "An update about..." # Save the files with a message
+git log --pretty=oneline           # Check it went through
+```
 
-Model output folders:
+# Copying Files To and From the Hoffman2 Server
 
-* Hoffman2 outputs are saved to the `$SCRATCH/outputs` folder:
-    + Directory: `/u/scratch/r/ryanbaxt/outputs`
-* These outputs are then copied from Hoffman2 to my personal laptop using `scp` run from my personal laptop. The local outputs folder is:
-    + Directory: `~/repos/data/hoffman2-outputs/scaling-field-paper`
+**On your laptop**, copy the files to the **Hoffman2** server
 
-To run a model:
+```
+# Navigate to the folder with the file
 
-* Navigate to "Hoffman2 Files" folder
-    + `cd repos/dbx-copy-COVID_Nationscape/code/rbk-explore/hoffman2-files`
-* Edit parameters for the R Script (top of file)
-    + `vim runjags-scaling-test.R`
-* Edit any of the Hoffman2 job scheduling parameters
-    + `vim runjags-scaling-test-submission-file`
-* Schedule the job
-    + `qsub runjags-scaling-test-submission-file`
-   
-To check on a model:
+# cd [DIRECTORY HERE]
+pwd # Check you're in the right directory
 
-* List jobs in the queue: `myjob`
-* Check on the status of active jobs: `check_usage`
-   
-To copy the output from Hoffman2 to the local folder:
+# Copy the file to Hoffman2... but first let's make a copy for demo purposes
 
-* Navigate to local data folder
-    + `cd ~/repos/data/hoffman2-outputs/scaling-field-paper`
-* Copy the file
-    + `scp ryanbaxt@hoffman2.idre.ucla.edu:/u/scratch/r/ryanbaxt/outputs/[MODEL NAME] .`
-   
-To copy a file from the local machine to Hoffman 2:
+cp test_file.R test_file_COPY_NUMBER_1.R # Make a new copy of the file on the laptop
+ls -l                                    # Look at the files in the directory
 
-* Navigate to the LOCAL folder, for example:
-    + `cd ~/repos/dbx-copy-COVID_Nationscape/code/rbk-explore/hoffman2-files`
-* Copy the file to the Hoffman2 using a LOCAL terminal
-    + `scp [OBJECT NAME] ryanbaxt@hoffman2.idre.ucla.edu:~/repos/dbx-copy-COVID_Nationscape/code/rbk-explore/hoffman2-files`
+# Now copy the file to the version of this folder on Hoffman2. Note that it 
+# will ask for your password again.
+
+scp test_file_COPY_NUMBER_1.R ryanbaxt@hoffman2.idre.ucla.edu:~/hoffman2-demo
+```
+
+You can also copy files from **Hofman2** to your **laptop**
+
+```
+# On Hoffman2, make a copy of the file
+
+cp test_file_COPY_NUMBER_1.R test_file_COPY_NUMBER_1_from_hoffman2.R
+
+# On your laptop, run this command
+
+scp ryanbaxt@hoffman2.idre.ucla.edu:~/hoffman2-demo/test_file_COPY_NUMBER_1_from_hoffman2.R . # Download the file from Hoffman2
+ls -l # Check if the file arrived from Hoffman2
+```
+
+# Scheduling a Job
+
+Make the scheduling file
+
+```
+# Make the scheduling file
+
+vim scheduling_file.sh # Open a file
+Rscript ~/hoffman2-demo/test_file.R # Add text to the file
+:x # Press escape first
+
+# Check whether the file was created
+
+pwd
+ls -l
+cat scheduling_file.sh # Prints out the file
+
+# Schedule the job
+
+qsub scheduling_file.sh
+
+# Check whether the job was successfullly scheduled
+myjobs
+```
+
