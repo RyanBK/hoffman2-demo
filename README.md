@@ -107,13 +107,13 @@ ls -l # Check if the file arrived from Hoffman2
 
 # Scheduling a Job
 
-Make the scheduling file
+**On Hoffman2**, Make the scheduling file
 
 ```
 # Make the scheduling file
 
 vim scheduling_file.sh # Open a file
-Rscript ~/hoffman2-demo/test_file.R # Add text to the file
+Rscript ~/hoffman2-demo/test_file_COPY_NUMBER_1.R # Add text to the file, change filename/number as appropriate
 :x # Press escape first
 
 # Check whether the file was created
